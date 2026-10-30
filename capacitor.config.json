@@ -1,0 +1,7 @@
+{
+  "appId": "com.husbandwife.app",
+  "appName": "Husband & Wife",
+  "webDir": "www",
+  "backgroundColor": "#ff4f81",
+  "android": { "allowMixedContent": false }
+}
