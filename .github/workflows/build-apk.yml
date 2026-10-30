@@ -1,0 +1,42 @@
+name: Build APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: npm install
+      - name: Prepare web files
+        run: |
+          mkdir -p www
+          cp index.html firebase-config.js www/
+          cp node_modules/firebase/firebase-app-compat.js node_modules/firebase/firebase-firestore-compat.js www/
+      - run: npx cap add android
+      - name: Generate icons
+        run: |
+          sudo apt-get update && sudo apt-get install -y librsvg2-bin
+          mkdir -p assets
+          rsvg-convert -w 1024 -h 1024 icon.svg -o assets/icon-only.png
+          rsvg-convert -w 1024 -h 1024 icon-foreground.svg -o assets/icon-foreground.png
+          rsvg-convert -w 1024 -h 1024 icon-background.svg -o assets/icon-background.png
+          npx capacitor-assets generate --android
+      - run: npx cap sync android
+      - name: Build APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: husband-wife-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
