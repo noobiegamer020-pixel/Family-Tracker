@@ -194,7 +194,7 @@ public class SyncWorker extends Worker {
         String first = body.split("\n")[0];
         NotificationCompat.Builder b = new NotificationCompat.Builder(ctx, "couple")
                 .setSmallIcon(R.drawable.ic_stat)
-                .setContentTitle("💞 Husband ♥ Wife")
+                .setContentTitle("💞 Bayti")
                 .setContentText(first)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
